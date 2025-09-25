@@ -17,7 +17,7 @@
 Depoyu klonlayın veya ZIP dosyasını indirin:
 
 bash
-git clone https://github.com/ShoriuOfficial/zphisher-turkish.git
+git clone https://github.com/ShoriuOfficial/zphisher_turkish.git
 cd zphisher-turkish
 bash zphisher.sh
 
@@ -42,5 +42,6 @@ Bu proje **GNU GPL-3.0** lisansı altında lisanslanmıştır. Detaylar için `L
 ## İletişim
 
 Sorularınız veya önerileriniz için [buradan](https://dc.gg/shoriuxqherox) adresinden iletişime geçebilirsiniz.
+
 
 
