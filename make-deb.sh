@@ -32,8 +32,8 @@ Version: ${_VERSION}
 Architecture: ${_ARCH}
 Maintainer: @htr-tech
 Depends: ${_depend}
-Homepage: https://github.com/htr-tech/zphisher
-Description: An automated phishing tool with 30+ templates. This Tool is made for educational purpose only !
+Homepage: https://github.com/ShoriuOfficial/zphisher_turkish
+Description: 30'dan fazla şablona sahip otomatik bir oltalama aracıdır. Bu araç yalnızca eğitim amaçlı yapılmıştır! Yazar, bu araç kitinin kötüye kullanılması durumunda sorumluluk kabul etmez!
 CONTROL_EOF
 
 cat <<- PRERM_EOF > ./build_env/DEBIAN/prerm
