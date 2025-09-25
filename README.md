@@ -3,7 +3,7 @@
 
 **ZPhisher Turkish**, Zphisher aracının Türkçe dil desteği eklenmiş sürümüdür. Bu araç, yalnızca **eğitim ve güvenlik araştırmaları** amacıyla geliştirilmiştir. Araç, kullanıcı dostu bir arayüz ile çeşitli oltalama (phishing) şablonlarını kullanmanıza olanak sağlar.
 
-> ⚠️ **Uyarı:** Bu aracı kötü amaçlarla kullanmak **yasalara aykırıdır**. Yazar, aracın kötüye kullanımından sorumlu tutulamaz.
+> ⚠️ **Uyarı:** Bu aracı kötü amaçlarla kullanmak **yasalara aykırıdır**. Yazar ve çevirici, aracın kötüye kullanımından sorumlu tutulamaz.
 
 ## Özellikler
 
@@ -42,6 +42,7 @@ Bu proje **GNU GPL-3.0** lisansı altında lisanslanmıştır. Detaylar için `L
 ## İletişim
 
 Sorularınız veya önerileriniz için [buradan](https://dc.gg/shoriuxqherox) adresinden iletişime geçebilirsiniz.
+
 
 
 
