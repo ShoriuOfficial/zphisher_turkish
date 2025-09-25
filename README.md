@@ -1,4 +1,4 @@
-````
+
 # ZPhisher Turkish
 
 **ZPhisher Turkish**, Zphisher aracının Türkçe dil desteği eklenmiş sürümüdür. Bu araç, yalnızca **eğitim ve güvenlik araştırmaları** amacıyla geliştirilmiştir. Araç, kullanıcı dostu bir arayüz ile çeşitli oltalama (phishing) şablonlarını kullanmanıza olanak sağlar.
@@ -16,7 +16,7 @@
 
 Depoyu klonlayın veya ZIP dosyasını indirin:
 
-```bash
+bash
 git clone https://github.com/ShoriuOfficial/zphisher-turkish.git
 cd zphisher-turkish
 bash zphisher.sh
@@ -42,4 +42,5 @@ Bu proje **GNU GPL-3.0** lisansı altında lisanslanmıştır. Detaylar için `L
 ## İletişim
 
 Sorularınız veya önerileriniz için [buradan](https://dc.gg/shoriuxqherox) adresinden iletişime geçebilirsiniz.
-````
+
+
